@@ -15,9 +15,9 @@ def main():
     triangleup=1
     # 拉莫尔进动频率(这里也是我自己瞎编的，拉莫尔进动频率中有一个磁场，速度，磁导率其实是不知道的)
     omega_0 = 1
-    # 平行充电能量和功率的最大值
-    epsilon_max_para = 4*hbar*omega_0
-    P_max_para=epsilon_max_para*Omega
+    # 最大充电能量和最大平行充电功率
+    epsilon_max = 4*hbar*omega_0
+    P_max_para=epsilon_max * Omega
     # 电量冲到最大值所需要的时间
     t_min_para = np.pi/(2*J)
     # 时间序列    
@@ -45,10 +45,10 @@ def main():
     E3 = (J-beta)*hbar
     E4 = (J+beta)*hbar
     #=======================绘制平行充电的函数===================
-    epsilon_para = epsilon_max_para * np.sin(Omega*t_para)**2
+    epsilon_para = epsilon_max * np.sin(Omega*t_para)**2
     P_para = P_max_para * np.sin(2*Omega*t_para)
     fig,axes = plt.subplots(1,2,figsize=(10,4))
-    axes[0].plot(t_para/t_min_para,epsilon_para/epsilon_max_para,'r')
+    axes[0].plot(t_para/t_min_para,epsilon_para/epsilon_max,'r')
     axes[0].set_ylabel('$\epsilon_{||}/\epsilon_\max$')
     axes[0].set_xlabel('$t/t_\min$')
     axes[1].plot(t_para/t_min_para,P_para/P_max_para)
