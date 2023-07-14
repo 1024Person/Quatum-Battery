@@ -9,6 +9,7 @@ from qutip import *
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
+from scipy.signal import argrelextrema
 
 # init variance
 
@@ -60,7 +61,8 @@ def energy_dicke(g, N):
 
     result = mesolve(H, psi_0, tlist, [], [Jz])
     ave_Jz_t = np.array(result.expect[0])
-    return (max(ave_Jz_t - ave_Jz_0), tlist[ave_Jz_t.argmax()])
+    ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
+    return (ave_Jz_t[ind] - ave_Jz_0, tlist[ind])
 
 
 # calcuate and show
