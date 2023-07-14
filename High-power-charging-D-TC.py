@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 # init state
 M = 15
-N = 10
+N = 1
 j = N/2.0
 n = 2*j+1
 hbar = 1
@@ -21,10 +21,10 @@ wc = 1
 
 # init opeator
 a = tensor(destroy(int(M)),qeye(int(n)))
-Jm = tensor(qeye(int(M)),jmat(int(j),'-'))
-Jp = tensor(qeye(int(M)),jmat(int(j),'+'))
-Jz = tensor(qeye(int(M)),jmat(int(j),'z'))
-Jx = tensor(qeye(int(M)),jmat(int(j),'x'))
+Jm = tensor(qeye(int(M)),jmat(j,'-'))
+Jp = tensor(qeye(int(M)),jmat(j,'+'))
+Jz = tensor(qeye(int(M)),jmat(j,'z'))
+Jx = tensor(qeye(int(M)),jmat(j,'x'))
 
 H1 = wc*a.dag()*a + wa*Jz
 H2 = 2*wc*Jx*(a+a.dag())
