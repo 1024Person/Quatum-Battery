@@ -9,23 +9,33 @@ from qutip import *
 import numpy as np
 import matplotlib.pyplot as plt
 import math
+from scipy.signal import argrelextrema
 
 # init variance
 M = 30
 N_max = 20 # the maximal amount of the photonic
 N_list = np.linspace(1,N_max,N_max)
 g_list = [0.05,0.5,2]
-N_t = 1000 # the amount of time
+
 wb = 1
 wc = 1
 hbar = 1
-tc = 80
+
+N_t_s = 2000 # the amount of strength coupling time
+N_t_w = 20000 # the amount of weak coupling time
+t_s = 15 # strength coupling
+t_w = 80 # weak coupling
 # define the set of t
-tlist = np.linspace(0,tc,N_t)
+t_s_list = np.linspace(0,t_s,N_t_s)
+t_w_list = np.linspace(0,t_w,N_t_w)
 # because the N is vairous, the psi_0 is deferent every time
 # define the energ function
 def energy_dicke(g,N):
     # init vairance
+    if g<0.1:
+        tlist = t_w_list
+    else:
+        tlist = t_s_list
     j = N/2
     n = 2*j+1
     # init operator
@@ -42,13 +52,16 @@ def energy_dicke(g,N):
     ave_Jz_0 = expect(Jz,psi_0)
     result = mesolve(H,psi_0,tlist,[],[Jz])
     ave_Jz_t = np.array(result.expect[0])
-    return (max(ave_Jz_t - ave_Jz_0),tlist[ave_Jz_t.argmax()])
+    ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
+    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])   
 
 
 def energy_para(g):
-    # E = N*wc*np.sin(g*wc*np.sqrt(tc))**2
-    # return E
     # init vairance
+    if g < 0.1:
+        tlist = t_w_list
+    else:
+        tlist = t_s_list    
     j = 1/2
     n = 2*j+1
     # init operator
@@ -60,18 +73,25 @@ def energy_para(g):
     state_c0 = basis(M,int(1))
     state_b0 = spin_state(1/2,-1/2)
     psi_0 = tensor(state_c0,state_b0)
-    H1 = wc*a.dag()*a+wc*Jz
+    H1 = wc*a.dag()*a+wb*Jz
     H2 = 2*wc*Jx*(a.dag()+a)
     H = H1+g*H2
     ave_Jz_0 = expect(Jz,psi_0)
     result = mesolve(H,psi_0,tlist,[],[Jz])
     ave_Jz_t = np.array(result.expect[0])
-    return (max(ave_Jz_t - ave_Jz_0),tlist[ave_Jz_t.argmax()])    
+    ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
+    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])   
 
 
 
 def energy_tc(g,N):
     # init vairance
+
+    if g<0.1:
+        tlist = t_w_list
+    else:
+        tlist = t_s_list
+
     j = N/2
     n = 2*j+1
     # init operator
@@ -84,11 +104,13 @@ def energy_tc(g,N):
     H1 = wc*a.dag()*a+wb*Jz
     H2 = wc*(Jm*a.dag()+Jp*a)
     H = H1+g*H2
-    # tlist = np.linspace(0,1/np.sqrt(N),100)
     ave_Jz_0 = expect(Jz,psi_0)
     result = mesolve(H,psi_0,tlist,[],[Jz])
     ave_Jz_t = np.array(result.expect[0])
-    return (max(ave_Jz_t - ave_Jz_0),tlist[ave_Jz_t.argmax()])
+
+    ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
+
+    return ( (ave_Jz_t[ind] - ave_Jz_0),t_w_list[ind] )
    
 
 # calculate and show
@@ -144,7 +166,7 @@ ax = plt.gca()
 ax.set_xlabel('N',fontsize=18,labelpad=1)
 # ax.set_ylabel('$E_\\bar\\lambda^{(#)}/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
 ax.set_ylabel('$max(E)/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
-ax.set_title('Fig2 (a)',fontsize=24)
+ax.set_title('Fig3 (a)',fontsize=24)
 ax.spines['bottom'].set_linewidth(1.7)
 ax.spines['top'].set_linewidth(1.7)
 ax.spines['right'].set_linewidth(1.7)
@@ -163,5 +185,11 @@ plt.plot(N_list,p_ps[0],color='red',linestyle='-',label='Dicke mode g = 0.05')
 plt.plot(N_list,p_ps[1],color='blue',linestyle='-.',label='Dicke mode g = 0.5')
 plt.plot(N_list,p_ps[2],color='green',linestyle='--',label='Dicke mode g = 2')
 # plt.legend(fontsize=8)
+ax = plt.gca()
+ax.set_xlabel('N',fontsize=18,labelpad=1)
+ax.set_ylabel('$P_\\bar\\lambda^{(\#)}/(Ng \\sqrt{N} \\hbar\\omega_c^2$',fontsize=18,labelpad=1)
+ax.set_title('Fig3(c)',fontsize=24)
+ax.axis([1,20,0,1])
+
 plt.show()
 
