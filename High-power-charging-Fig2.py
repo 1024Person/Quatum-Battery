@@ -1,5 +1,5 @@
 """
-论文的Fig1，算法重建
+论文的Fig2，算法重建
 """
 from qutip import *
 import numpy as np
@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import math
 
 # init variance
-M = 15 # the dimension of a
 N = 10 # the amount of photonic
+M = 4*N # the dimension of a
 j = N/2.0 # the enegevalues of J^2
 m = 2*j+1 # the enegevalues of Jz
 
