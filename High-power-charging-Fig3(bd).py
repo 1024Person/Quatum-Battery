@@ -89,13 +89,12 @@ plt.plot(g_list, e_ds[3], color='green', linestyle=':', label='N = 12')
 
 ax = plt.gca()
 ax.set_xlabel('$\\bar\\lambda$', fontsize=18, labelpad=1)
-ax.set_ylabel('$max(E)/N$', fontsize=18, labelpad=1)
+ax.set_ylabel('$E(\\tau_c)/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
 ax.set_title('Fig 3(b)', fontsize=24)
 ax.spines['bottom'].set_linewidth(1.7)
 ax.spines['top'].set_linewidth(1.7)
 ax.spines['right'].set_linewidth(1.7)
 ax.spines['left'].set_linewidth(1.7)
-# plt.legend(fontsize=8)
 
 # draw Fig 3 (d)
 plt.figure(figsize=(8, 6), dpi=80)
@@ -106,7 +105,7 @@ plt.plot(g_list, p_ds[3], color='green', linestyle=':',  label = 'N = 12')
 
 ax = plt.gca()
 ax.set_xlabel('$\\bar\\lambda$', fontsize=18, labelpad=1)
-ax.set_ylabel('$max(P)$', fontsize=18, labelpad=1)
+ax.set_ylabel('$P_\\bar\\lambda^{(\#)}/(Ng \\sqrt{N} \\hbar\\omega_c^2$',fontsize=18,labelpad=1)
 ax.set_title('Fig 3(d)', fontsize=24)
 
 ax.spines['bottom'].set_linewidth(1.7)
