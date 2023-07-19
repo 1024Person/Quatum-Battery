@@ -33,7 +33,7 @@ psi_c0 = basis(M,N) # what does mean?
 psi_0 = tensor(psi_c0,psi_b0)
 
 # t set
-ts = 8
+ts = 16
 tlist = np.linspace(0,ts,1000)
 
 # calcuate average of H(0) and H(τc)
@@ -59,9 +59,9 @@ plt.xticks(fontsize=22)#对坐标的值数值，大小限制
 plt.yticks(fontsize=22)
 
 ax=plt.gca() 
-plt.axis([0,ts,0,0.75])
+plt.axis([0,ts,0,1])
 
-ax.set_ylabel('max(E)/N',fontsize=22,labelpad = 1)
+ax.set_ylabel('E(t)/N',fontsize=22,labelpad = 1)
 ax.set_xlabel('t',fontsize=22,labelpad =1)
 
 ax.spines['bottom'].set_linewidth(1.7)
@@ -69,19 +69,19 @@ ax.spines['top'].set_linewidth(1.7)
 ax.spines['left'].set_linewidth(1.7)
 ax.spines['right'].set_linewidth(1.7)
 
-plt.legend(fontsize=10)
+plt.legend(fontsize='18')
 # plt.show()
 # g << 1
-tlist_ = np.linspace(0,80,5000)
+tlist_ = np.linspace(0,100,5000)
 plt.figure(figsize=(8,6),dpi=80)
-plot3, = plt.plot(tlist_,E(0.05,tlist_),'r-',label='g << 1',color='red',linestyle='-')
+plot3, = plt.plot(tlist_,E(0.05,tlist_),'r-',label='g << 1',color='red')
 plt.xticks(fontsize=22)
 plt.yticks(fontsize=22)
 
 ax = plt.gca()
 plt.axis([0,80,0,1])
 ax.set_xlabel('t',fontsize=22,labelpad=1)
-ax.set_ylabel('max(E)/N',fontsize=22,labelpad=1)
+ax.set_ylabel('E(t)/N',fontsize=22,labelpad=1)
 
 ax.spines['bottom'].set_linewidth(1.7)
 ax.spines['top'].set_linewidth(1.7)
