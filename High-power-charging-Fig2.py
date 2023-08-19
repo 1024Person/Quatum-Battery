@@ -7,8 +7,8 @@ import matplotlib.pyplot as plt
 import math
 
 # init variance
-N = 10 # the amount of photonic
-M = 4*N # the dimension of a
+N = 1 # the amount of photonic
+M = 100 # the dimension of a
 j = N/2.0 # the enegevalues of J^2
 m = 2*j+1 # the enegevalues of Jz
 
@@ -33,7 +33,7 @@ psi_c0 = basis(M,N) # what does mean?
 psi_0 = tensor(psi_c0,psi_b0)
 
 # t set
-ts = 16
+ts = 100
 tlist = np.linspace(0,ts,1000)
 
 # calcuate average of H(0) and H(τc)

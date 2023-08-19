@@ -12,8 +12,8 @@ import math
 from scipy.signal import argrelextrema
 
 # init variance
-M = 30
 N_max = 20 # the maximal amount of the photonic
+M = 40
 N_list = np.linspace(1,N_max,N_max)
 g_list = [0.05,0.5,2]
 
@@ -21,9 +21,9 @@ wb = 1
 wc = 1
 hbar = 1
 
-N_t_s = 2000 # the amount of strength coupling time
-N_t_w = 20000 # the amount of weak coupling time
-t_s = 15 # strength coupling
+N_t_s = 1000 # the amount of strength coupling time
+N_t_w = 1000 # the amount of weak coupling time
+t_s = 16 # strength coupling
 t_w = 80 # weak coupling
 # define the set of t
 t_s_list = np.linspace(0,t_s,N_t_s)
@@ -52,9 +52,9 @@ def energy_dicke(g,N):
     ave_Jz_0 = expect(Jz,psi_0)
     result = mesolve(H,psi_0,tlist,[],[Jz])
     ave_Jz_t = np.array(result.expect[0])
+    
     ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
-    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])   
-
+    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])
 
 def energy_para(g):
     # init vairance
@@ -70,17 +70,23 @@ def energy_para(g):
     Jp = tensor(qeye(int(M)),jmat(j,'+'))
     Jx = tensor(qeye(int(M)),jmat(j,'x'))
     Jz = tensor(qeye(int(M)),jmat(j,'z'))
-    state_c0 = basis(M,int(1))
-    state_b0 = spin_state(1/2,-1/2)
-    psi_0 = tensor(state_c0,state_b0)
     H1 = wc*a.dag()*a+wb*Jz
     H2 = 2*wc*Jx*(a.dag()+a)
     H = H1+g*H2
+
+    # init state
+    state_c0 = basis(int(M),int(1))
+    state_b0 = spin_state(1/2,-1/2)
+    psi_0 = tensor(state_c0,state_b0)
+    
+    # calculate the energy of QBs 
     ave_Jz_0 = expect(Jz,psi_0)
     result = mesolve(H,psi_0,tlist,[],[Jz])
     ave_Jz_t = np.array(result.expect[0])
+
+    # find the frist maximum of energy and the time of it
     ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
-    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])   
+    return (ave_Jz_t[ind] - ave_Jz_0 , tlist[ind])
 
 
 
@@ -109,8 +115,7 @@ def energy_tc(g,N):
     ave_Jz_t = np.array(result.expect[0])
 
     ind = argrelextrema(ave_Jz_t,np.greater)[0][0]
-
-    return ( (ave_Jz_t[ind] - ave_Jz_0),t_w_list[ind] )
+    return ((ave_Jz_t[ind] - ave_Jz_0),t_w_list[ind])
    
 
 # calculate and show
@@ -133,7 +138,7 @@ for j in g_list:
     p_p  = []
     for i in N_list:
         # init state
-        state_c0 = basis(M,int(i))
+        state_c0 = basis(int(M),int(i))
         state_b0 = spin_state(i/2,-i/2)
         psi_0 = tensor(state_c0,state_b0)
         d_et = energy_dicke(j,i)
@@ -164,14 +169,12 @@ plt.plot(N_list,e_ps[1],color='blue',linestyle='dotted')
 plt.plot(N_list,e_ps[2],color='green',linestyle='--')
 ax = plt.gca()
 ax.set_xlabel('N',fontsize=18,labelpad=1)
-# ax.set_ylabel('$E_\\bar\\lambda^{(#)}/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
-ax.set_ylabel('$max(E)/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
+ax.set_ylabel('$E(\\tau_c)/(N\\hbar\\omega_c)$',fontsize=18,labelpad=1)
 ax.set_title('Fig3 (a)',fontsize=24)
 ax.spines['bottom'].set_linewidth(1.7)
 ax.spines['top'].set_linewidth(1.7)
 ax.spines['right'].set_linewidth(1.7)
 ax.spines['left'].set_linewidth(1.7)
-# plt.legend(fontsize=8)
 
 
 # draw Fig3 (c)
@@ -184,12 +187,10 @@ plt.scatter(N_list,p_ds[2],color='green',marker='D',label='Dicke mode g = 2')
 plt.plot(N_list,p_ps[0],color='red',linestyle='-',label='Dicke mode g = 0.05')
 plt.plot(N_list,p_ps[1],color='blue',linestyle='-.',label='Dicke mode g = 0.5')
 plt.plot(N_list,p_ps[2],color='green',linestyle='--',label='Dicke mode g = 2')
-# plt.legend(fontsize=8)
 ax = plt.gca()
 ax.set_xlabel('N',fontsize=18,labelpad=1)
 ax.set_ylabel('$P_\\bar\\lambda^{(\#)}/(Ng \\sqrt{N} \\hbar\\omega_c^2$',fontsize=18,labelpad=1)
 ax.set_title('Fig3(c)',fontsize=24)
 ax.axis([1,20,0,1])
-
 plt.show()
 
