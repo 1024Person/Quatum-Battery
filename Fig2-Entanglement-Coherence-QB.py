@@ -73,9 +73,9 @@ def claculate(J, triangle):
             print('i={}'.format(i))
 
     # ========================= 计算功率 ==================
-    P = np.diff(E)
+    P = np.diff(E) / (t[1]-t[0])
 
-    return t / (np.pi / 2 / Omega), E, P, C0, Q
+    return t / (np.pi / 2 / Omega), E / 4, P / 4 , C0, Q
 
 
 def calculate_cq(rho, *alpha):
@@ -86,43 +86,45 @@ def calculate_cq(rho, *alpha):
     return c, q
 
 
+
 if __name__ == "__main__":
     t, E1, P1, C1, Q1 = claculate(J=1, triangle=1)
     _, E2, P2, C2, Q2 = claculate(J=1, triangle=0)
     _, E3, P3, C3, Q3 = claculate(J=1, triangle=-1)
-    E_max = np.max(np.array([np.max(E1), np.max(E2), np.max(E3)]))
-    P_max = np.max(np.array([np.max(P1), np.max(P2), np.max(P3)]))
+    fig,ax = plt.subplots(2,2)
+    fig.tight_layout()
 
-    plt.subplot(221)
-    plt.plot(t, E1 / E_max, 'g--', label=r'$\Delta=1$')
-    plt.plot(t, E2 / E_max, 'r--', label=r'$\Delta=0$')
-    plt.plot(t, E3 / E_max, 'k--', label=r'$\Delta=-1$')
-    plt.ylabel(r'$E(t) /E_{max}$')
-    plt.xlabel(r'$t/t_{min}$')
-    plt.legend()
+    ax[0,0].plot(t, E1, 'g--', label=r'$\Delta=1$')
+    ax[0,0].plot(t, E2, 'r--', label=r'$\Delta=0$')
+    ax[0,0].plot(t, E3, 'k-', label=r'$\Delta=-1$')
+    ax[0,0].set_ylabel(r'$E(t) /E_{max}$')
+    ax[0,0].set_xlabel(r'$t/t_{min}$')
+    ax[0,0].legend()
 
     # plt.figure()
-    plt.subplot(222)
-    plt.plot(t[0:-1], P1 / P_max, 'g--', label=r'$\Delta=1$')
-    plt.plot(t[0:-1], P2 / P_max, 'r--', label=r'$\Delta=0$')
-    plt.plot(t[0:-1], P3 / P_max, 'k--', label=r'$\Delta=-1$')
-    plt.legend()
-    plt.ylabel(r'$P(t)/P_{max}$')
-    plt.xlabel(r'$t/t_{min}$')
+    ax[0,1].plot(t[0:-1], P1, 'g--', label=r'$\Delta=1$')
+    ax[0,1].plot(t[0:-1], P2, 'r--', label=r'$\Delta=0$')
+    ax[0,1].plot(t[0:-1], P3, 'k-', label=r'$\Delta=-1$')
+    ax[0,1].set_ylabel(r'$P(t)/P_{max}$')
+    ax[0,1].set_xlabel(r'$t/t_{min}$')
+    ax[0,1].legend()
 
-    plt.subplot(223)
-    plt.plot(t, C1, 'g--', label=r'$\Delta=1$')
-    plt.plot(t, C2, 'r--', label=r'$\Delta=0$')
-    plt.plot(t, C3, 'k-', label=r'$\Delta=-1$')
-    plt.ylabel(r'$C_0$')
-    plt.xlabel(r'$t/t_{min}$')
-    plt.legend()
 
-    plt.subplot(224)
-    plt.plot(t, Q1, 'g--', label=r'$\Delta=1$')
-    plt.plot(t, Q2, 'r--', label=r'$\Delta=0$')
-    plt.plot(t, Q3, 'k-', label=r'$\Delta=-1$')
-    plt.ylabel(r'$Q$')
-    plt.xlabel(r'$t/t_{min}$')
-    plt.legend()
+    ax[1,0].plot(t, Q1, 'g--', label=r'$\Delta=1$')
+    ax[1,0].plot(t, Q2, 'r--', label=r'$\Delta=0$')
+    ax[1,0].plot(t, Q3, 'k-', label=r'$\Delta=-1$')
+    ax[1,0].set_ylabel(r'$Q$')
+    ax[1,0].set_xlabel(r'$t/t_{min}$')
+    ax[1,0].legend()
+
+
+    ax[1,1].plot(t, C1, 'g--', label=r'$\Delta=1$')
+    ax[1,1].plot(t, C2, 'r--', label=r'$\Delta=0$')
+    ax[1,1].plot(t, C3, 'k-', label=r'$\Delta=-1$')
+    ax[1,1].set_ylabel(r'$C_0$')
+    ax[1,1].set_xlabel(r'$t/t_{min}$')
+    ax[1,1].legend()
+    fig.suptitle('Fig 2')
+    plt.subplots_adjust(top=0.85)
     plt.show()
+    pass
