@@ -15,14 +15,14 @@ def claculate(J, triangle):
     hbar = 1  # 自然单位，
     omega0 = 1  # 原子自己的震动频率
     t = np.linspace(0, np.pi / 2 / Omega, 1000)  # 定义时间序列
-    E = np.ones_like(t)  # 体系能量
     # 定义一些参数
     alpha = J * (triangle - 1)  # 1
     beta = np.sqrt(J ** 2 * (triangle - 1) ** 2 + 4 * Omega ** 2)  # 2
     gamma1 = 2 * Omega / np.sqrt(2 * (alpha + beta) ** 2 + 8 * Omega ** 2)  # 0.5
     gamma2 = (alpha + beta) / np.sqrt(2 * (alpha + beta) ** 2 + 8 * Omega ** 2)  # 0.5
-    C0 = np.ones_like(E)
-    Q = np.ones_like(E)
+    E = np.ones_like(t)  # 体系能量
+    C0 = np.ones_like(E) # 体系相关度
+    Q = np.ones_like(E)  # 体系纠缠度
 
     # 单自旋的本征态
     up = np.array([[1], [0]])
@@ -97,7 +97,7 @@ if __name__ == "__main__":
     ax[0,0].plot(t, E1, 'g--', label=r'$\Delta=1$')
     ax[0,0].plot(t, E2, 'r--', label=r'$\Delta=0$')
     ax[0,0].plot(t, E3, 'k-', label=r'$\Delta=-1$')
-    ax[0,0].set_ylabel(r'$E(t) /E_{max}$')
+    ax[0,0].set_ylabel(r'$W(t) /W_{max}$')
     ax[0,0].set_xlabel(r'$t/t_{min}$')
     ax[0,0].legend()
 

@@ -89,15 +89,18 @@ def calculate_ave(P,C0,Q,t_min,t_delta):
     return P_ave,C0_ave,Q_ave
 
 def draw(E_ave,P_ave,Q_ave,C0_ave,triangles):
-    plt.figure()
+    fig = plt.figure()
 
-    plt.plot(triangles,E_ave,'k-',label=r'$E_{fin}(\Delta)$')
+    plt.plot(triangles,E_ave,'k-',label=r'$W_{fin}(\Delta)$')
     plt.plot(triangles,P_ave,'r--',label=r'$\bar{P}(\Delta)$')
     plt.plot(triangles,Q_ave,'g--',label=r'$\bar{Q}(\Delta)$')
     plt.plot(triangles,C0_ave,'b-.',label=r'$\bar{C}_{0}(\Delta)$')
     plt.xlabel(r'$\Delta$')
     plt.legend()
     plt.title('Fig 3')
+    # ax.set(xticks=[-1,-0.5,0,0.5,1],xticklabels=['-1','-0.5','0','0.5','1'])
+    plt.xticks([-1,-0.5,0,0.5,1])
+    # plt.set_xticklabels(['-1','-0.5','0','0.5','1'])
     plt.show()
 
 
