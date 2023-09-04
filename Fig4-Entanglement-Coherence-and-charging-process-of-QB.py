@@ -8,6 +8,7 @@
 
 import numpy as np
 import matplotlib.pyplot as plt
+from matplotlib import cm
 
 
 
@@ -109,41 +110,47 @@ def draw(E,P,Q,C0,triangle,J):
     绘制三维图像
     """
     fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
-    ax.plot_surface(triangle,np.log10(J),E, cmap='winter')
+    surf = ax.plot_surface(triangle,np.log10(J),E, cmap= cm.coolwarm)
     ax.set_xlabel('$\\Delta$')
     ax.set_ylabel('$log_{10}(J/\\Omega)$')
     ax.set_zlabel('$W_{fin}$')
     ax.set(yticks=[-1,-0.5,0,0.5,1],xticks=[-1,0,1])
     ax.set(yticklabels=['$-1$','$-0.5$','$0$','$0.5$','$1$'],
        xticklabels=['$-1$','$0$','$1$'],)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+
 # 
     fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
-    ax.plot_surface(triangle,np.log10(J),P,cmap='winter')
+    surf = ax.plot_surface(triangle,np.log10(J),P,cmap= cm.coolwarm)
     ax.set_xlabel('$\\Delta$')
     ax.set_ylabel('$log_{10}(J/\\Omega)$')
     ax.set_zlabel('$\\bar{P}$')
     ax.set(yticks=[-1,-0.5,0,0.5,1],xticks=[-1,0,1])
     ax.set(yticklabels=['$-1$','$-0.5$','$0$','$0.5$','$1$'],
        xticklabels=['$-1$','$0$','$1$'],)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+
 #  
     fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
-    ax.plot_surface(triangle,np.log10(J),Q, cmap='winter')
+    surf= ax.plot_surface(triangle,np.log10(J),Q, cmap= cm.coolwarm)
     ax.set_xlabel('$\\Delta$')
     ax.set_ylabel('$log_{10}(J/\\Omega)$')
     ax.set_zlabel('$\\bar{Q}$')
     ax.set(yticks=[-1,-0.5,0,0.5,1],xticks=[-1,0,1])
     ax.set(yticklabels=['$-1$','$-0.5$','$0$','$0.5$','$1$'],
        xticklabels=['$-1$','$0$','$1$'],)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
+
 #  
     fig, ax = plt.subplots(subplot_kw={'projection': '3d'})
-    ax.plot_surface(triangle,np.log10(J),C0, cmap='winter')
+    surf = ax.plot_surface(triangle,np.log10(J),C0, cmap= cm.coolwarm)
     ax.set_xlabel('$\\Delta$')
     ax.set_ylabel('$log_{10}(J/\\Omega)$')
     ax.set_zlabel('$\\bar{C}_{0}$')
-    
     ax.set(yticks=[-1,-0.5,0,0.5,1],xticks=[-1,0,1])
     ax.set(yticklabels=['$-1$','$-0.5$','$0$','$0.5$','$1$'],
        xticklabels=['$-1$','$0$','$1$'],)
+    fig.colorbar(surf, shrink=0.5, aspect=5)
     
     plt.show()
 
@@ -163,12 +170,12 @@ def main():
     P = np.ones_like(J_s)
     C0 = np.ones_like(J_s)
     Q = np.ones_like(J_s)
-    calculate(0,1)
-    # for i in range(tn):
-        # for j in range(Jn):
-            # E[i,j],P[i,j],C0[i,j],Q[i,j] = calculate(J_s[i,j],t_s[i,j])
-            # print('i={},j={}'.format(i,j))
-    # draw(E,P,Q,C0,t_s,J_s)
+    # calculate(0,1)
+    for i in range(tn):
+        for j in range(Jn):
+            E[i,j],P[i,j],C0[i,j],Q[i,j] = calculate(J_s[i,j],t_s[i,j])
+            print('i={},j={}'.format(i,j))
+    draw(E,P,Q,C0,t_s,J_s)
 
 
     

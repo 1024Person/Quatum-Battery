@@ -3,7 +3,8 @@
  *Author:			王成杰
  *Filename:			Entanglement,-Coherence-QB
  *Date:			2023-08-16 21:31:32
- *Description:Entanglement,Coherence and the charging process of Quantum Batteries，复原这篇论文中的能量和功率的图片
+ *Description:Entanglement,Coherence and the charging process of Quantum Batteries
+              ，复原这篇论文中的能量和功率的图片Fig2
 """
 import numpy as np
 import matplotlib.pyplot as plt
@@ -11,8 +12,8 @@ import matplotlib.pyplot as plt
 
 def claculate(J, triangle):
     # =======================初始化变量，态矢，能量等等===================
-    Omega = 1  # 这个不明白是什么
-    hbar = 1  # 自然单位，
+    Omega = 1  # 外场驱动强度
+    hbar = 1  # 自然单位
     omega0 = 1  # 原子自己的震动频率
     t = np.linspace(0, np.pi / 2 / Omega, 1000)  # 定义时间序列
     # 定义一些参数
@@ -97,7 +98,7 @@ if __name__ == "__main__":
     ax[0,0].plot(t, E1, 'g--', label=r'$\Delta=1$')
     ax[0,0].plot(t, E2, 'r--', label=r'$\Delta=0$')
     ax[0,0].plot(t, E3, 'k-', label=r'$\Delta=-1$')
-    ax[0,0].set_ylabel(r'$W(t) /W_{max}$')
+    ax[0,0].set_ylabel(r'$E(t) /E_{max}$')
     ax[0,0].set_xlabel(r'$t/t_{min}$')
     ax[0,0].legend()
 
@@ -124,7 +125,7 @@ if __name__ == "__main__":
     ax[1,1].set_ylabel(r'$C_0$')
     ax[1,1].set_xlabel(r'$t/t_{min}$')
     ax[1,1].legend()
-    fig.suptitle('Fig 2')
+    # fig.suptitle('Fig 2')
     plt.subplots_adjust(top=0.85)
     plt.show()
     pass
