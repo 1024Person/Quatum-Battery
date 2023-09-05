@@ -60,12 +60,11 @@ pauli_z_3 = np.kron(np.eye(2),np.kron(np.eye(2),pauli_z))
 # 现在是三粒子状态，所以我感觉应该是改成三粒子状态
 H_ch = hbar*Omega*(pauli_x_1+pauli_x_2+pauli_x_3)
 def claculate(triangle):
-    H_int = J*hbar*(np.dot(pauli_x_1,pauli_x_2)+np.dot(pauli_y_1,pauli_y_2)+triangle*np.dot(pauli_z_1,pauli_z_2))
-    H_int_ =J*hbar*(np.dot(pauli_x_1,pauli_x_3)+np.dot(pauli_y_1,pauli_y_3)+triangle*np.dot(pauli_z_1,pauli_z_3)) +\
+    H_int =J*hbar*(np.dot(pauli_x_1,pauli_x_2)+np.dot(pauli_y_1,pauli_y_2)+triangle*np.dot(pauli_z_1,pauli_z_2)) +\
           J*hbar*(np.dot(pauli_x_2,pauli_x_3)+np.dot(pauli_y_2,pauli_y_3)+triangle*np.dot(pauli_z_2,pauli_z_3))
-    H = H_ch +H_int + H_int_
+    H = H_ch  + H_int
     # 定义功率算符
-    P_opea = 1/1j*(np.dot(H0+H_ch,H_int_)-np.dot(H_int_,H0+H_ch))   # 这个无论怎么看都是0 
+    P_opea = 1/1j*(np.dot(H0,H_int)-np.dot(H_int,H0))   # 这个无论怎么看都是0 
 
     engval,engstate = np.linalg.eig(H)
 
