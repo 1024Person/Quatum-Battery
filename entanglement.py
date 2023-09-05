@@ -18,10 +18,10 @@ def main():
     J=0
     t,E_p,P_p,*_ = calculate_coll_para(0,1)
     t,E_c,P_c,*_ = calculate_coll_para(1,1)
-    draw(t,E_p,'r-',1,'Parallel charging',r'$E/E_{max}$')
-    draw(t,E_c,'g--',1,'Collective charging',r'$E/E_{max}$')
-    draw(t[0:-1],P_p,'r-',2,'Parallel charging',r'$P/P_{max}$')
-    draw(t[0:-1],P_c,'g--',2,'Collective charging',r'$P/P_{max}$')
+    draw(t,E_p,'r-',1,label='Parallel charging',ylabel=r'$E/E_{max}$')
+    draw(t,E_c,'g--',1,label='Collective charging',ylabel=r'$E/E_{max}$')
+    draw(t[0:-1],P_p,'r-',2,ylabel=r'$P/P_{max}$')
+    draw(t[0:-1],P_c,'g--',2,ylabel=r'$P/P_{max}$')
     plt.show()
     
     
