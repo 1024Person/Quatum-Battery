@@ -6,6 +6,7 @@
  *Description:复现Fig5 这个三个单元的量子电池
 """
 import numpy as np
+from qutip import *
 import matplotlib.pyplot as plt
 # =============================== 初始化变量
 hbar = 1
@@ -38,7 +39,7 @@ H0 = 3*hbar*omega0*np.dot(uuu,uuu.T)+\
 
 
 
-# 这里的泡利矩阵需要在两个粒子的共同本征态表示成矩阵形式
+# 单粒子情况下的泡利矩阵
 pauli_x = np.array([[0,1],[1,0]])
 pauli_y = 1j*np.array([[0,-1],[1,0]])
 pauli_z = np.array([[1,0],[0,-1]])
@@ -61,12 +62,12 @@ pauli_z_3 = np.kron(np.eye(2),np.kron(np.eye(2),pauli_z))
 H_ch = hbar*Omega*(pauli_x_1+pauli_x_2+pauli_x_3)
 def claculate(triangle):
     H_int =J*hbar*(np.dot(pauli_x_1,pauli_x_2)+np.dot(pauli_y_1,pauli_y_2)+triangle*np.dot(pauli_z_1,pauli_z_2)) +\
-          J*hbar*(np.dot(pauli_x_2,pauli_x_3)+np.dot(pauli_y_2,pauli_y_3)+triangle*np.dot(pauli_z_2,pauli_z_3))
+           J*hbar*(np.dot(pauli_x_2,pauli_x_3)+np.dot(pauli_y_2,pauli_y_3)+triangle*np.dot(pauli_z_2,pauli_z_3))
     H = H_ch  + H_int
     # 定义功率算符
-    P_opea = 1/1j*(np.dot(H0,H_int)-np.dot(H_int,H0))   # 这个无论怎么看都是0 
-
-    engval,engstate = np.linalg.eig(H)
+    P_opea = 1/1j*(np.dot(H0,H_ch)-np.dot(H_ch,H0))   
+    # 卧槽！eigh和eig这么不同吗？eig就不对，eigh就对了？啊？
+    engval,engstate = np.linalg.eigh(H)
 
     E1=engval[0]
     E2=engval[1]
