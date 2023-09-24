@@ -133,7 +133,7 @@ def E_fun_001(N, J, omega_a, omega_c, delta, g, tlist):
     psi_list = []
     for n in range(N):
         psi_list.append(basis(2, 0))
-    # # psi_list.append(basis(2, 1)
+    # psi_list.append(basis(2, 1)
     psi0 = tensor(psi_list)
     # 相干态第一个参数是截断数，第二个参数是alpha，但是第二个参数为什么是2*N？难道不应该是N吗？
     # 还有就是前面的这个nc+1是什么意思？前面的这个希尔伯特空间截断数应该是随便设得，
