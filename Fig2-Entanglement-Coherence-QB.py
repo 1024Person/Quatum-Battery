@@ -93,6 +93,7 @@ if __name__ == "__main__":
     _, E2, P2, C2, Q2 = claculate(J=1, triangle=0)
     _, E3, P3, C3, Q3 = claculate(J=1, triangle=-1)
     fig,ax = plt.subplots(2,2)
+    # fig.set_size_inches(20,20,forward=True)
     fig.tight_layout()
 
     ax[0,0].plot(t, E1, 'g--', label=r'$\Delta=1$')
@@ -127,5 +128,6 @@ if __name__ == "__main__":
     ax[1,1].legend()
     # fig.suptitle('Fig 2')
     plt.subplots_adjust(top=0.85)
+    # plt.savefig('./result/entanglement-coherence-and-charging-process-of-quantum-batteries/Fig2.jpg',dpi=300)
     plt.show()
     pass
