@@ -9,9 +9,9 @@ from qutip import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-# init state
+# init state，单个粒子的吗？
 M = 15
-N = 1
+N = 8
 j = N/2.0
 n = 2*j+1
 hbar = 1
@@ -28,7 +28,7 @@ Jx = tensor(qeye(int(M)),jmat(j,'x'))
 
 H1 = wc*a.dag()*a + wa*Jz
 H2 = 2*wc*Jx*(a+a.dag())
-H3= wc*(Jm*a.dag()+Jp*a)
+H3= wc*(Jm*a.dag()+Jp*a) # 这里也没有体现出求和啊？
 
 # init state
 

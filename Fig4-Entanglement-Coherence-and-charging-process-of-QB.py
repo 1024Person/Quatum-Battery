@@ -164,7 +164,7 @@ def main():
     Jn = 100
     tn = 5
     J = np.linspace(0.1,10,Jn)
-    triangle = np.array([-1,-0.5,0,0.5,1])
+    triangle = np.linspace(-1,1,tn)
     J_s,t_s = np.meshgrid(J,triangle)
     E = np.ones_like(J_s)
     P = np.ones_like(J_s)
@@ -181,4 +181,3 @@ def main():
     
 if __name__=="__main__":
     main()
-    print(1)
