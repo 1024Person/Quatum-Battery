@@ -19,7 +19,7 @@ sz_sigma = []
 # 单位矩阵
 si = qeye(2)
 # 构造湮灭算符和产生算符
-a = tensor(si,si,si,si,si,si,si,si, destroy(M))
+a = tensor(si, si, si, si, si, si, si, si, destroy(M))
 a_dag = a.dag()
 # 构造单粒子的升降算符,在循环中会用到
 sup = jmat(1 / 2, '+')
@@ -53,8 +53,8 @@ for i in range(N):
 psi_0 = tensor(psi_0)
 # 构造体系初态
 psi_coh = coherent(M, alpha)  # 相干态
-# psi_fork = basis(M,M-1)
-# psi_squ = squeeze(M,np.arcsinh(N))*basis(M,0)
+psi_fork = basis(M,0)
+psi_squ = squeeze(M,np.arcsinh(N))*basis(M,0)
 # 富克态和相干态的直积
 psi_all = tensor(psi_0, psi_coh)
 
@@ -88,7 +88,6 @@ def WE_calc(g):
     for i in range(tn):
         psi = states[i]
         rhoB = ptrace(psi, [_ for _ in range(N)])
-        # E[i] = np.trace(HB1*rhoB)
         E_B[i] = expect(HB, psi)
         E_A[i] = expect(HA, psi)
         vb1 = np.array(rhoB.eigenenergies(sort='high'))  # 降序排列
@@ -97,7 +96,7 @@ def WE_calc(g):
         E_B[i] = E_B[i] - EB0
         print('i={}'.format(i))
 
-    return E_B, W, W / E_B, E_A
+    return E_B, W, W / (E_B+0.0001), E_A
 
 
 EB, WB, WE_r, EA = WE_calc(g=1)
