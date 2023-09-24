@@ -2,10 +2,10 @@ from qutip import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-tao = 2 * np.pi / np.sqrt(8)
+N = 8
+tao = 2 * np.pi / np.sqrt(N)
 tn = 500
 t = np.linspace(0, tao, tn)
-N = 8
 M = 4 * N
 g = 1
 hbar = 1
@@ -19,7 +19,7 @@ sz_sigma = []
 # 单位矩阵
 si = qeye(2)
 # 构造湮灭算符和产生算符
-a = tensor(si, si, si, si, si, si, si, si, destroy(M))
+a = tensor(si,si,si,si,si,si,si,si, destroy(M))
 a_dag = a.dag()
 # 构造单粒子的升降算符,在循环中会用到
 sup = jmat(1 / 2, '+')
@@ -52,13 +52,15 @@ for i in range(N):
     psi_0.append(basis(2, 1))
 psi_0 = tensor(psi_0)
 # 构造体系初态
-s_al = coherent(M, alpha)  # 相干态
+psi_coh = coherent(M, alpha)  # 相干态
+# psi_fork = basis(M,M-1)
+# psi_squ = squeeze(M,np.arcsinh(N))*basis(M,0)
 # 富克态和相干态的直积
-psi_all = tensor(psi_0, s_al)
+psi_all = tensor(psi_0, psi_coh)
 
 
 # 计算量子电池的能量，可提取功，功率以及充电器的能量
-def WE_calc(g, t):
+def WE_calc(g):
     """
     计算量子电池的能量，EB
     参数g代表耦合强度
@@ -79,26 +81,39 @@ def WE_calc(g, t):
     EB0 = expect(HB, psi_all)
     result = mesolve(H, psi_all, t, [], [])
     states = result.states
-    E = np.ones_like(t)
+    E_B = np.ones_like(t)
     W = np.ones_like(t)
+    E_A = np.ones_like(t)
     vb2 = np.array(HB1.eigenenergies())
     for i in range(tn):
         psi = states[i]
-        rhoB = ptrace(psi, [0, 1, 2, 3, 4, 5, 6, 7])
+        rhoB = ptrace(psi, [_ for _ in range(N)])
         # E[i] = np.trace(HB1*rhoB)
-        E[i] = expect(HB, psi)
-        vb1 = np.array(sorted(rhoB.eigenenergies(), reverse=True))  # 降序排列
+        E_B[i] = expect(HB, psi)
+        E_A[i] = expect(HA, psi)
+        vb1 = np.array(rhoB.eigenenergies(sort='high'))  # 降序排列
         m = np.sum(vb1 * vb2)
-        W[i] = E[i] - m
-        E[i] = E[i] - EB0
+        W[i] = E_B[i] - m
+        E_B[i] = E_B[i] - EB0
         print('i={}'.format(i))
 
-    return E, W
+    return E_B, W, W / E_B, E_A
 
 
-E1, W1 = WE_calc(g=1, t=t)
-plt.plot(np.sqrt(N) * t, E1 / N, color='black', linestyle='-')
-plt.plot(np.sqrt(N) * t, W1 / N, color='red', linestyle='--')
-
+EB, WB, WE_r, EA = WE_calc(g=1)
+plt.plot(np.sqrt(N) * t, EB / N, color='black', linestyle='-', label=r'$E_B^{(N)}(\tau)$')
+plt.plot(np.sqrt(N) * t, WB / N, color='red', linestyle='--', label=r'$\epsilon^{(N)}(\tau)$')
+plt.plot(np.sqrt(N) * t, EA / N, color='blue', linestyle=':', label=r'$E_A^{(N)}(\tau)$')
+plt.plot(np.sqrt(N) * t, WE_r, color='green', linestyle='-.', label=r'$\frac{\epsilon^{(N)}_B(\tau)}{E_B^{(N)}(\tau)}$')
+plt.xlim(0, 2 * np.pi)
+plt.ylim(0, 1.1)
+plt.yticks([0, 0.25, 0.5, 0.75, 1], ['0', '0.25', '0.5', '0.75', '1'])
+plt.xticks([0, 0.5 * np.pi, np.pi, 1.5 * np.pi, 2 * np.pi],
+           [r'0', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
+plt.legend()
+ax = plt.gca()
+ax.spines['bottom'].set_linewidth(2.5)
+ax.spines['top'].set_linewidth(2.5)
+ax.spines['right'].set_linewidth(2.5)
+ax.spines['left'].set_linewidth(2.5)
 plt.show()
-
