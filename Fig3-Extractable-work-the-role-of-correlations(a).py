@@ -67,21 +67,18 @@ def calc_ratio(n):
     result2 = mesolve(H, psi_02, tlist, [], [])
     result3 = mesolve(H, psi_03, tlist, [], [])
     # 寻找最优时间
-    e = expect(HB, result1.states)
-    m1 = passive_e(n,HB1,result1.states)
-    p = np.diff(e) / (tlist[1] - tlist[0])
-    ind_tau1 = np.where(m1 == np.max(m1))[0][0]
+    e = expect(HB,result1.states)
+    p = e/tlist
+    ind_tau1 = np.where(p == np.max(p))[0][0]
 
-    e = expect(HB, result2.states)
-    m2 = passive_e(n,HB1,result2.states)
-    p = np.diff(e) / (tlist[1] - tlist[0])
-    ind_tau2 = np.where(m2 == np.max(m2))[0][0]
-
-    e = expect(HB, result3.states)
-    m3 = passive_e(n,HB1,result3.states)
-    p = np.diff(e) / (tlist[1] - tlist[0])
-    ind_tau3 = np.where(m3 == np.max(m3))[0][0]
-
+    e = expect(HB,result2.states)
+    p = e/tlist
+    ind_tau2 = np.where(p == np.max(p))[0][0]
+    
+    e = expect(HB,result3.states)
+    p = e/tlist
+    ind_tau3 = np.where(p == np.max(p))[0][0]
+    
     # 准备需要的态
     psi_1 = result1.states[ind_tau1]
     psi_1B = ptrace(psi_1, [_ for _ in range(n)])
@@ -90,12 +87,15 @@ def calc_ratio(n):
     psi_3 = result3.states[ind_tau3]
     psi_3B = ptrace(psi_3, [_ for _ in range(n)])
     # 计算能量
-    E1 = expect(HB, psi_1)  # fork态
-    W1 = E1 - m1[ind_tau1]
-    E2 = expect(HB, psi_2)  # 相干态
-    W2 = E2 - m2[ind_tau2]
-    E3 = expect(HB, psi_3)  # 压缩态
-    W3 = E3 - m3[ind_tau3]
+    E1 = expect(HB, psi_1)  # fork态的能量
+    m1 = passive_e(HB1,psi_1B) # fork态的被动态能量
+    W1 = E1 - m1
+    E2 = expect(HB, psi_2)  # 相干态的电池能量
+    m2 = passive_e(HB1,psi_2B) # 相干态的被动态能量
+    W2 = E2 - m2
+    E3 = expect(HB, psi_3)  # 压缩态的电池能量
+    m3 = passive_e(HB1,psi_3B) # 压缩态的被动态能量
+    W3 = E3 - m3
     return W1 / (E1 + 0.0001), W2 / (E2 + 0.0001), W3 / (E3 + 0.0001)
 
 
