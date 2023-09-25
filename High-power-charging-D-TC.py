@@ -11,7 +11,7 @@ import matplotlib.pyplot as plt
 
 # init state，单个粒子的吗？
 M = 15
-N = 8
+N = 1
 j = N/2.0
 n = 2*j+1
 hbar = 1

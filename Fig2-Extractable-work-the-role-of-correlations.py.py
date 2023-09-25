@@ -2,16 +2,13 @@ from qutip import *
 import numpy as np
 import matplotlib.pyplot as plt
 
-N = 8
+N = 1
 tao = 2 * np.pi / np.sqrt(N)
 tn = 500
 t = np.linspace(0, tao, tn)
 M = 4 * N
 g = 1
-hbar = 1
 omega0 = 1
-j = N / 2
-n = 2 * j + 1
 alpha = np.sqrt(N)
 sub_sigma = []
 plu_sigma = []
@@ -19,7 +16,7 @@ sz_sigma = []
 # 单位矩阵
 si = qeye(2)
 # 构造湮灭算符和产生算符
-a = tensor(si, si, si, si, si, si, si, si, destroy(M))
+a = tensor(tensor([si for _ in range(N)]), destroy(M))
 a_dag = a.dag()
 # 构造单粒子的升降算符,在循环中会用到
 sup = jmat(1 / 2, '+')
@@ -48,15 +45,19 @@ for i in range(N):
     # 重新把第i个元素赋值为单位矩阵，因为下一次循环还需要用到这个列表
     # 如果，不现在把这个元素改回来，下次可能会出错
     op_list[i] = si
-    # 当前粒子的fock态
+    # 当前粒子的fock态，注意这里用到的是basis(2,1)
+    # 按理来说，这里不应该是（2，1）应该是（2，0）的，
+    # 因为电池中刚开始不应该有能量，但是如果是（2，0）的话， 结果就不对
+    # 这个应该是和哈密顿量的设置有关，
+    # 哈密顿量设置了最开始的位置是激发态处于的位置,所以，体系的态应该是越靠下，越是基态 
     psi_0.append(basis(2, 1))
 psi_0 = tensor(psi_0)
 # 构造体系初态
 psi_coh = coherent(M, alpha)  # 相干态
-psi_fork = basis(M,0)
-psi_squ = squeeze(M,np.arcsinh(N))*basis(M,0)
+psi_fork = basis(M, N)
+psi_squ = squeeze(M, np.arcsinh(N)) * basis(M, 0)
 # 富克态和相干态的直积
-psi_all = tensor(psi_0, psi_coh)
+psi_all = tensor(psi_0, psi_fork)
 
 
 # 计算量子电池的能量，可提取功，功率以及充电器的能量
@@ -96,7 +97,7 @@ def WE_calc(g):
         E_B[i] = E_B[i] - EB0
         print('i={}'.format(i))
 
-    return E_B, W, W / (E_B+0.0001), E_A
+    return E_B, W, W / (E_B + 0.0001), E_A
 
 
 EB, WB, WE_r, EA = WE_calc(g=1)
@@ -104,11 +105,11 @@ plt.plot(np.sqrt(N) * t, EB / N, color='black', linestyle='-', label=r'$E_B^{(N)
 plt.plot(np.sqrt(N) * t, WB / N, color='red', linestyle='--', label=r'$\epsilon^{(N)}(\tau)$')
 plt.plot(np.sqrt(N) * t, EA / N, color='blue', linestyle=':', label=r'$E_A^{(N)}(\tau)$')
 plt.plot(np.sqrt(N) * t, WE_r, color='green', linestyle='-.', label=r'$\frac{\epsilon^{(N)}_B(\tau)}{E_B^{(N)}(\tau)}$')
-plt.xlim(0, 2 * np.pi)
-plt.ylim(0, 1.1)
-plt.yticks([0, 0.25, 0.5, 0.75, 1], ['0', '0.25', '0.5', '0.75', '1'])
-plt.xticks([0, 0.5 * np.pi, np.pi, 1.5 * np.pi, 2 * np.pi],
-           [r'0', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
+# plt.xlim(0, 2 * np.pi)
+# plt.ylim(0, 1.1)
+# plt.yticks([0, 0.25, 0.5, 0.75, 1], ['0', '0.25', '0.5', '0.75', '1'])
+# plt.xticks([0, 0.5 * np.pi, np.pi, 1.5 * np.pi, 2 * np.pi],
+#            [r'0', r'$\frac{\pi}{2}$', r'$\pi$', r'$\frac{3\pi}{2}$', r'$2\pi$'])
 plt.legend()
 ax = plt.gca()
 ax.spines['bottom'].set_linewidth(2.5)
